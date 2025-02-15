@@ -1,9 +1,11 @@
+import com.maze.Maze;
 import edu.usu.graphics.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Game {
     private final Graphics2D graphics;
+    private Maze maze = new Maze(.8f,20);
 
     public Game(Graphics2D graphics) {
         this.graphics = graphics;
@@ -45,7 +47,7 @@ public class Game {
 
     private void render(double elapsedTime) {
         graphics.begin();
-
+        maze.render(graphics);
         graphics.end();
     }
 }
