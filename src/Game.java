@@ -71,7 +71,7 @@ public class Game {
     }
 
     public void initialize() {
-        backgroundImage = new Texture("resources/images/stone_background.jpg");
+        backgroundImage = new Texture("resources/images/stick.png");
         endMarkerImage = new Texture("resources/images/flag.jpg");
         breadcrumbImage = new Texture("resources/images/dot.png");
         hintImage = new Texture("resources/images/hint.png");
@@ -303,6 +303,7 @@ public class Game {
         graphics.begin();
 
         if (gameState == GameState.PLAYING) {
+            graphics.draw(backgroundImage,backgroundRect,Color.WHITE);
             renderGame();
         } else if (gameState == GameState.MENU) {
             renderMenu();
