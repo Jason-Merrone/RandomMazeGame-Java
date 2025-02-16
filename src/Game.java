@@ -24,7 +24,7 @@ public class Game {
     private double startTime;
     private Font font;
     private Texture backgroundImage;
-    private Rectangle backgroundRect = new Rectangle(-1.0f, -1.0f, 2.0f, 2.0f); // Cover entire screen
+    private Rectangle backgroundRect = new Rectangle(-1.0f, -1.0f, 2.0f, 2.0f, -1);
     private Texture endMarkerImage;
     private Texture breadcrumbImage;
     private Texture hintImage;
@@ -71,7 +71,7 @@ public class Game {
     }
 
     public void initialize() {
-        backgroundImage = new Texture("resources/images/stick.png");
+        backgroundImage = new Texture("resources/images/pooh.jpg");
         endMarkerImage = new Texture("resources/images/flag.jpg");
         breadcrumbImage = new Texture("resources/images/dot.png");
         hintImage = new Texture("resources/images/hint.png");
@@ -89,7 +89,7 @@ public class Game {
         playerPath.clear();
         playerPath.add(startSpace);
         score = 0;
-        startTime = glfwGetTime();
+        startTime = glfwGetTime(); // Reset start time here
         shortestPath = maze.findShortestPath(startSpace, endSpace);
         shortestPathFromPlayer = null;
         hintEnabled = false;
@@ -445,7 +445,7 @@ public class Game {
         // Display Score and Time
         double elapsedTimeInSeconds = glfwGetTime() - startTime;
         String timeString = String.format("%.0f", elapsedTimeInSeconds);
+        graphics.drawTextByWidth(font, "Time: " + timeString, 0.0f, 0.0f, 0.8f, Color.YELLOW); // Display time at center, larger, yellow
         graphics.drawTextByWidth(font, "Score: " + score, -0.95f, 0.9f, 0.4f, Color.WHITE);
-        graphics.drawTextByWidth(font, "Time: " + timeString, 0.65f, 0.9f, 0.4f, Color.WHITE);
     }
 }
