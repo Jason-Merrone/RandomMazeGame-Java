@@ -302,8 +302,9 @@ public class Game {
     private void render(double elapsedTime) {
         graphics.begin();
 
+        graphics.draw(backgroundImage,backgroundRect,Color.WHITE);
+
         if (gameState == GameState.PLAYING) {
-            graphics.draw(backgroundImage,backgroundRect,Color.WHITE);
             renderGame();
         } else if (gameState == GameState.MENU) {
             renderMenu();
@@ -321,19 +322,19 @@ public class Game {
         float lineHeight = 0.1f;
         float centerX = 0.0f;
 
-        graphics.drawTextByWidth(font, "Maze Game", centerX - 0.2f, startY, 0.4f, Color.YELLOW);
+        graphics.drawTextByWidth(font, "Maze Game", centerX +0.4f, startY-0.3f, 0.2f, Color.YELLOW);
         startY -= 2 * lineHeight;
-        graphics.drawTextByWidth(font, "F1 - New Game 5x5", centerX - 0.2f, startY, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F1 - New Game 5x5", centerX - 0.8f, startY, 0.4f, Color.WHITE);
         startY -= lineHeight;
-        graphics.drawTextByWidth(font, "F2 - New Game 10x10", centerX - 0.2f, startY, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F2 - New Game 10x10", centerX - 0.8f, startY, 0.4f, Color.WHITE);
         startY -= lineHeight;
-        graphics.drawTextByWidth(font, "F3 - New Game 15x15", centerX - 0.2f, startY, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F3 - New Game 15x15", centerX - 0.8f, startY, 0.4f, Color.WHITE);
         startY -= lineHeight;
-        graphics.drawTextByWidth(font, "F4 - New Game 20x20", centerX - 0.2f, startY, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F4 - New Game 20x20", centerX - 0.8f, startY, 0.4f, Color.WHITE);
         startY -= lineHeight;
-        graphics.drawTextByWidth(font, "F5 - High Scores", centerX - 0.2f, startY, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F5 - High Scores", centerX - 0.8f, startY, 0.4f, Color.WHITE);
         startY -= lineHeight;
-        graphics.drawTextByWidth(font, "F6 - Credits", centerX - 0.2f, startY, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F6 - Credits", centerX - 0.8f, startY, 0.4f, Color.WHITE);
     }
 
     private void renderHighScores() {
