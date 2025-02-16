@@ -7,8 +7,8 @@ import edu.usu.utils.Tuple2;
 import java.util.HashMap;
 
 public class GridSpace {
-    private final  Tuple2<Float,Float> position;
-    private final HashMap<String,Boolean> walls = new HashMap<>();
+    private final Tuple2<Float, Float> position;
+    private final HashMap<String, Boolean> walls = new HashMap<>();
     private final Rectangle topWall;
     private final Rectangle bottomWall;
     private final Rectangle leftWall;
@@ -17,24 +17,23 @@ public class GridSpace {
     private float cellWidth;
     private float x;
     private float y;
-
     private boolean visited = false;
 
     public GridSpace(float x, float y, float cellWidth, float wallThickness) {
-        this.position = new Tuple2<>(x,y);
+        this.position = new Tuple2<>(x, y);
 
-        this.walls.put("top",true);
-        this.walls.put("bottom",true);
-        this.walls.put("left",true);
-        this.walls.put("right",true);
+        this.walls.put("top", true);
+        this.walls.put("bottom", true);
+        this.walls.put("left", true);
+        this.walls.put("right", true);
 
-        topWall = new Rectangle(x-((float) cellWidth /2), y-((float) cellWidth /2), cellWidth, wallThickness);
-        bottomWall = new Rectangle(x-((float) cellWidth /2), y+((float) cellWidth /2), cellWidth, wallThickness);
-        leftWall = new Rectangle(x-((float) cellWidth /2), y-((float) cellWidth /2), wallThickness, cellWidth);
-        rightWall = new Rectangle(x+((float) cellWidth /2), y-((float) cellWidth /2), wallThickness, cellWidth);
+        topWall = new Rectangle(x - cellWidth / 2, y - cellWidth / 2, cellWidth, wallThickness);
+        bottomWall = new Rectangle(x - cellWidth / 2, y + cellWidth / 2, cellWidth, wallThickness);
+        leftWall = new Rectangle(x - cellWidth / 2, y - cellWidth / 2, wallThickness, cellWidth);
+        rightWall = new Rectangle(x + cellWidth / 2, y - cellWidth / 2, wallThickness, cellWidth);
     }
 
-    public float getWallThickness(){
+    public float getWallThickness() {
         return wallThickness;
     }
 
@@ -46,10 +45,11 @@ public class GridSpace {
         return y;
     }
 
-    public float getCellWidth() {
+    public float getCellSize() {
         return cellWidth;
     }
-    public Tuple2<Float, Float> getPosition(){
+
+    public Tuple2<Float, Float> getPosition() {
         return position;
     }
 
@@ -61,7 +61,7 @@ public class GridSpace {
         walls.replace(direction, false);
     }
 
-    public void resetWalls(){
+    public void resetWalls() {
         walls.replace("top", true);
         walls.replace("bottom", true);
         walls.replace("left", true);
@@ -76,27 +76,27 @@ public class GridSpace {
         this.visited = visited;
     }
 
-    public Rectangle getTopRect(){
-        if(walls.get("top"))
+    public Rectangle getTopRect() {
+        if (walls.get("top"))
             return topWall;
-        return new Rectangle(0,0,0,0);
+        return new Rectangle(0, 0, 0, 0);
     }
 
-    public Rectangle getBottomRect(){
-        if(walls.get("bottom"))
+    public Rectangle getBottomRect() {
+        if (walls.get("bottom"))
             return bottomWall;
-        return new Rectangle(0,0,0,0);
+        return new Rectangle(0, 0, 0, 0);
     }
 
-    public Rectangle getLeftRect(){
-        if(walls.get("left"))
+    public Rectangle getLeftRect() {
+        if (walls.get("left"))
             return leftWall;
-        return new Rectangle(0,0,0,0);
+        return new Rectangle(0, 0, 0, 0);
     }
 
-    public Rectangle getRightRect(){
-        if(walls.get("right"))
+    public Rectangle getRightRect() {
+        if (walls.get("right"))
             return rightWall;
-        return new Rectangle(0,0,0,0);
+        return new Rectangle(0, 0, 0, 0);
     }
 }

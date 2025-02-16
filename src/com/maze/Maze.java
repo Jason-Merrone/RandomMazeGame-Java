@@ -3,37 +3,56 @@ package com.maze;
 import edu.usu.graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Collections;
 
 public class Maze {
     private final int gridSpacesPerRow;
     private ArrayList<ArrayList<GridSpace>> gridSpaces = new ArrayList<>();
     private final Random random = new Random();
-    private int playerX = 0;
-    private int playerY = 0;
+    private int playerX = 0; // Player's row index
+    private int playerY = 0; // Player's column index
+    private float CELL_WIDTH;
+    private float WALL_THICKNESS;
+    private float mazeCenterX;
+    private float mazeCenterY;
 
     public Maze(float size, int gridSpacesPerRow){
         this.gridSpacesPerRow = gridSpacesPerRow;
-        float CELL_WIDTH = size/gridSpacesPerRow;
-        float WALL_THICKNESS = .002f;
-        float mazeCenterX = CELL_WIDTH * (gridSpacesPerRow / 2f);
-        float mazeCenterY = CELL_WIDTH * (gridSpacesPerRow / 2f);
+        this.CELL_WIDTH = size / gridSpacesPerRow;
+        this.WALL_THICKNESS = .002f;
+        this.mazeCenterX = CELL_WIDTH * (gridSpacesPerRow / 2f);
+        this.mazeCenterY = CELL_WIDTH * (gridSpacesPerRow / 2f);
 
         // Build the grid
-        for(int i = 0; i < gridSpacesPerRow; i++){
+        for (int i = 0; i < gridSpacesPerRow; i++) {
             ArrayList<GridSpace> row = new ArrayList<>();
-            for(int j = 0; j < gridSpacesPerRow; j++){
+            for (int j = 0; j < gridSpacesPerRow; j++) {
                 row.add(new GridSpace(i * CELL_WIDTH - mazeCenterX, j * CELL_WIDTH - mazeCenterY, CELL_WIDTH, WALL_THICKNESS));
             }
             gridSpaces.add(row);
         }
 
         generateMaze();
+        setPlayerPosition(0, 0); // Initialize player at start
     }
 
     public ArrayList<ArrayList<GridSpace>> getGridSpaces(){
         return new ArrayList<>(gridSpaces);
+    }
+
+    public float getCellSize() {
+        return CELL_WIDTH;
+    }
+
+    public float getWallThickness() {
+        return WALL_THICKNESS;
     }
 
     private void generateMaze() {
@@ -79,9 +98,7 @@ public class Maze {
         int col = getColIndex(cell);
 
         // Check neighbors
-        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-        String[] wallNames = {"top", "bottom", "left", "right"};
-
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
         for (int i = 0; i < directions.length; i++) {
             int newRow = row + directions[i][0];
             int newCol = col + directions[i][1];
@@ -95,7 +112,6 @@ public class Maze {
         }
     }
 
-
     private Wall getRandomWall(Set<Wall> frontier) {
         int randomIndex = random.nextInt(frontier.size());
         int i = 0;
@@ -107,7 +123,6 @@ public class Maze {
         }
         return null;
     }
-
 
     private void removeWallBetween(GridSpace cell1, GridSpace cell2) {
         int row1 = getRowIndex(cell1);
@@ -134,12 +149,11 @@ public class Maze {
         }
     }
 
-
     private boolean isValidCell(int row, int col) {
         return row >= 0 && row < gridSpacesPerRow && col >= 0 && col < gridSpacesPerRow;
     }
 
-    private int getRowIndex(GridSpace cell) {
+    public int getRowIndex(GridSpace cell) {
         for (int i = 0; i < gridSpacesPerRow; i++) {
             if (gridSpaces.get(i).contains(cell)) {
                 return i;
@@ -148,7 +162,7 @@ public class Maze {
         return -1;
     }
 
-    private int getColIndex(GridSpace cell) {
+    public int getColIndex(GridSpace cell) {
         for (int i = 0; i < gridSpacesPerRow; i++) {
             for (int j = 0; j < gridSpacesPerRow; j++) {
                 if (gridSpaces.get(i).get(j) == cell) {
@@ -159,7 +173,126 @@ public class Maze {
         return -1;
     }
 
+    public List<GridSpace> findShortestPath(GridSpace start, GridSpace end) {
+        if (start == null || end == null) {
+            return null; // Handle invalid input
+        }
 
+        Queue<GridSpace> queue = new LinkedList<>();
+        Map<GridSpace, GridSpace> predecessorMap = new HashMap<>(); // To reconstruct path
+        Set<GridSpace> visitedSpaces = new HashSet<>();
+
+        queue.offer(start);
+        visitedSpaces.add(start);
+        predecessorMap.put(start, null); // Start has no predecessor
+
+        while (!queue.isEmpty()) {
+            GridSpace currentSpace = queue.poll();
+
+            if (currentSpace == end) {
+                return reconstructPath(predecessorMap, end); // Path found!!!!!!!!!!!
+            }
+
+            int currentRow = getRowIndex(currentSpace);
+            int currentCol = getColIndex(currentSpace);
+
+            int[][] directions = { { 0, -1 }, { 0, 1 }, { 1, 0 }, { -1, 0 } };
+            String[] wallNames = { "top", "bottom", "right", "left" };
+
+            for (int i = 0; i < directions.length; i++) {
+                int newRow = currentRow + directions[i][0];
+                int newCol = currentCol + directions[i][1];
+
+                if (isValidCell(newRow, newCol)) {
+                    GridSpace neighbor = gridSpaces.get(newRow).get(newCol);
+
+                    if (!visitedSpaces.contains(neighbor) && !hasWallBetween(currentSpace, neighbor, wallNames[i])) {
+                        visitedSpaces.add(neighbor);
+                        predecessorMap.put(neighbor, currentSpace);
+                        queue.offer(neighbor);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // method to find shortest path from player position
+    public List<GridSpace> findShortestPathFromPlayer() {
+        GridSpace startSpace = getPlayerGridSpace();
+        GridSpace endSpace = gridSpaces.get(gridSpacesPerRow - 1).get(gridSpacesPerRow - 1); // Assuming end is bottom-right
+        return findShortestPath(startSpace, endSpace);
+    }
+
+    private boolean hasWallBetween(GridSpace cell1, GridSpace cell2, String direction) {
+        return cell1.isWall(direction);
+    }
+
+    private List<GridSpace> reconstructPath(Map<GridSpace, GridSpace> predecessorMap, GridSpace endSpace) {
+        List<GridSpace> path = new ArrayList<>();
+        GridSpace current = endSpace;
+
+        while (current != null) {
+            path.add(current);
+            current = predecessorMap.get(current);
+        }
+
+        Collections.reverse(path);
+        return path;
+    }
+
+    // Player-related methods
+
+    public void setPlayerPosition(int row, int col) {
+        if (isValidCell(row, col)) {
+            playerX = row;
+            playerY = col;
+        } else {
+            System.out.println("Invalid player position: (" + row + ", " + col + ")");
+        }
+    }
+
+
+    public GridSpace getPlayerGridSpace() {
+        if (isValidCell(playerX, playerY)) {
+            return gridSpaces.get(playerX).get(playerY);
+        }
+        return null;
+    }
+
+    public boolean movePlayer(int dx, int dy) {
+
+        int newRow = playerX + dy;
+        int newCol = playerY + dx;
+
+        if (isValidCell(newRow, newCol)) {
+            GridSpace currentSpace = getPlayerGridSpace();
+
+            if (dx == 1 && !currentSpace.isWall("bottom")) { // Moving right
+                playerY = newCol;
+                return true;
+            } else if (dx == -1 && !currentSpace.isWall("top")) { // Moving left
+                playerY = newCol;
+                return true;
+            } else if (dy == 1 && !currentSpace.isWall("right")) { // Moving down
+                playerX = newRow;
+                return true;
+            } else if (dy == -1 && !currentSpace.isWall("left")) { // Moving up
+                playerX = newRow;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int calculateMoveScore(GridSpace currentSpace, List<GridSpace> shortestPath) {
+        if (shortestPath != null && shortestPath.contains(currentSpace)) {
+            return 1; // Positive score for being on the shortest path
+        } else {
+            return -1; // Negative score for being off the shortest path
+        }
+    }
 
     private static class Wall {
         GridSpace cell1;
@@ -175,7 +308,8 @@ public class Maze {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Wall wall = (Wall) o;
-            return (cell1.equals(wall.cell1) && cell2.equals(wall.cell2)) || (cell1.equals(wall.cell2) && cell2.equals(wall.cell1));
+            return (cell1.equals(wall.cell1) && cell2.equals(wall.cell2)) ||
+                    (cell1.equals(wall.cell2) && cell2.equals(wall.cell1));
         }
 
         @Override
