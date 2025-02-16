@@ -1,6 +1,5 @@
 package com.maze;
 
-import edu.usu.graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
