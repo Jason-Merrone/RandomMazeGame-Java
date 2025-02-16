@@ -1,20 +1,29 @@
+import com.maze.GridSpace;
 import com.maze.Maze;
 import edu.usu.graphics.*;
+
+import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Game {
     private final Graphics2D graphics;
-    private Maze maze = new Maze(.8f,18);
+    private Maze maze;
+
+    private Texture backgroundImage;
+    private Rectangle backgroundRect = new Rectangle(-.4f, -.4f, .8f, .8f);
 
     public Game(Graphics2D graphics) {
         this.graphics = graphics;
     }
 
     public void initialize() {
+        backgroundImage = new Texture("resources/images/stick.png");
+        maze = new Maze(.8f,18);
     }
 
     public void shutdown() {
+        backgroundImage.cleanup();
     }
 
     public void run() {
@@ -43,11 +52,23 @@ public class Game {
     }
 
     private void update(double elapsedTime) {
+
     }
 
     private void render(double elapsedTime) {
         graphics.begin();
-        maze.render(graphics);
+        graphics.draw(backgroundImage,backgroundRect,Color.WHITE);
+        ArrayList<ArrayList<GridSpace>> gridsToRender = maze.getGridSpaces();
+
+        for(var row : gridsToRender){
+            for(var grid : row) {
+                graphics.draw(grid.getBottomRect(), Color.PURPLE);
+                graphics.draw(grid.getTopRect(), Color.PURPLE);
+                graphics.draw(grid.getLeftRect(), Color.PURPLE);
+                graphics.draw(grid.getRightRect(), Color.PURPLE);
+            }
+        }
+
         graphics.end();
     }
 }

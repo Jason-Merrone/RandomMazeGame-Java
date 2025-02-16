@@ -10,6 +10,8 @@ public class Maze {
     private final int gridSpacesPerRow;
     private ArrayList<ArrayList<GridSpace>> gridSpaces = new ArrayList<>();
     private final Random random = new Random();
+    private int playerX = 0;
+    private int playerY = 0;
 
     public Maze(float size, int gridSpacesPerRow){
         this.gridSpacesPerRow = gridSpacesPerRow;
@@ -28,6 +30,10 @@ public class Maze {
         }
 
         generateMaze();
+    }
+
+    public ArrayList<ArrayList<GridSpace>> getGridSpaces(){
+        return new ArrayList<>(gridSpaces);
     }
 
     private void generateMaze() {
@@ -154,13 +160,6 @@ public class Maze {
     }
 
 
-    public void render(Graphics2D graphics){
-        for (var col : gridSpaces) {
-            for (var gridSpace : col) {
-                gridSpace.render(graphics);
-            }
-        }
-    }
 
     private static class Wall {
         GridSpace cell1;

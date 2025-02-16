@@ -13,6 +13,10 @@ public class GridSpace {
     private final Rectangle bottomWall;
     private final Rectangle leftWall;
     private final Rectangle rightWall;
+    private float wallThickness;
+    private float cellWidth;
+    private float x;
+    private float y;
 
     private boolean visited = false;
 
@@ -30,6 +34,21 @@ public class GridSpace {
         rightWall = new Rectangle(x+((float) cellWidth /2), y-((float) cellWidth /2), wallThickness, cellWidth);
     }
 
+    public float getWallThickness(){
+        return wallThickness;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getCellWidth() {
+        return cellWidth;
+    }
     public Tuple2<Float, Float> getPosition(){
         return position;
     }
@@ -57,14 +76,27 @@ public class GridSpace {
         this.visited = visited;
     }
 
-    public void render(Graphics2D graphics){
+    public Rectangle getTopRect(){
         if(walls.get("top"))
-            graphics.draw(topWall, Color.PURPLE);
+            return topWall;
+        return new Rectangle(0,0,0,0);
+    }
+
+    public Rectangle getBottomRect(){
         if(walls.get("bottom"))
-            graphics.draw(bottomWall, Color.PURPLE);
+            return bottomWall;
+        return new Rectangle(0,0,0,0);
+    }
+
+    public Rectangle getLeftRect(){
         if(walls.get("left"))
-            graphics.draw(leftWall, Color.PURPLE);
+            return leftWall;
+        return new Rectangle(0,0,0,0);
+    }
+
+    public Rectangle getRightRect(){
         if(walls.get("right"))
-            graphics.draw(rightWall, Color.PURPLE);
+            return rightWall;
+        return new Rectangle(0,0,0,0);
     }
 }
