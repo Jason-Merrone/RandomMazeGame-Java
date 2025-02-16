@@ -5,7 +5,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Game {
     private final Graphics2D graphics;
-    private Maze maze = new Maze(.8f,20);
+    private Maze maze = new Maze(.8f,18);
 
     public Game(Graphics2D graphics) {
         this.graphics = graphics;

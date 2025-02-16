@@ -14,6 +14,8 @@ public class GridSpace {
     private final Rectangle leftWall;
     private final Rectangle rightWall;
 
+    private boolean visited = false;
+
     public GridSpace(float x, float y, float cellWidth, float wallThickness) {
         this.position = new Tuple2<>(x,y);
 
@@ -38,6 +40,21 @@ public class GridSpace {
 
     public void removeWall(String direction) {
         walls.replace(direction, false);
+    }
+
+    public void resetWalls(){
+        walls.replace("top", true);
+        walls.replace("bottom", true);
+        walls.replace("left", true);
+        walls.replace("right", true);
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
 
     public void render(Graphics2D graphics){
